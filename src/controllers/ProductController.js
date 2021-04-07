@@ -276,7 +276,7 @@ class ProductController {
       });
     } catch (error) {
       return res.status(500).send({
-        message: e,
+        message: error,
       });
     }
   }
