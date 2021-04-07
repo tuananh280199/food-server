@@ -7,6 +7,7 @@ const db = mysql.createConnection({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   insecureAuth: true,
+  socketPath: "/var/run/mysqld/mysqld.sock",
 });
 
 module.exports = db;
