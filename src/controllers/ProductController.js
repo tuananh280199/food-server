@@ -40,6 +40,19 @@ class ProductController {
     }
   }
 
+  async getHintProduct(req, res) {
+    try {
+      const data = await productModel.getProductHint();
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
   async filterNewProductHot(req, res) {
     try {
       let page = 1;

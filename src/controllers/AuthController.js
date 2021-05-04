@@ -3,11 +3,19 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const saltRounds = 10;
+const tokenList = {};
 
 function generateAcceptToken(user) {
   return jwt.sign({ user }, process.env.TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: "12h",
+    expiresIn: 1200, // 20 phút
+  });
+}
+
+function generateRefreshToken(user) {
+  return jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
+    algorithm: "HS256",
+    expiresIn: 86400, // 1 ngày
   });
 }
 
@@ -41,12 +49,49 @@ class AuthController {
             avatar: user.results.avatar,
           };
           const accessToken = generateAcceptToken(userToken);
+          const refreshToken = generateRefreshToken(userToken);
+          tokenList[refreshToken] = userToken;
           return res.status(200).send({
             message: "Đăng Nhập Thành Công",
-            access_token: accessToken,
-            profile: userToken,
+            profile: {
+              ...userToken,
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            },
           });
         }
+      }
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  //refresh_token
+  async refreshToken(req, res) {
+    try {
+      const { refreshToken } = req.body;
+      if (refreshToken && refreshToken in tokenList) {
+        jwt.verify(
+          refreshToken,
+          process.env.REFRESH_TOKEN_SECRET,
+          (err, decoded) => {
+            if (err) {
+              return res.status(403).send(err);
+            } else {
+              const user = tokenList[refreshToken];
+              const token = generateAcceptToken(user);
+              return res.status(200).send({
+                token,
+              });
+            }
+          }
+        );
+      } else {
+        return res.status(400).send({
+          message: "Invalid Request",
+        });
       }
     } catch (e) {
       return res.status(500).send({
@@ -117,12 +162,53 @@ class AuthController {
       }
     } catch (error) {
       return res.status(500).send({
+        message: error,
+      });
+    }
+  }
+
+  //forgot password
+  //checkExistsUser
+  async checkExistsUser(req, res) {
+    try {
+      const { username } = req.body;
+      const user = await userModel.findUserByUserName(username);
+      if (!user.results) {
+        return res.status(404).send({
+          message: "Tài Khoản Không Tồn Tại",
+        });
+      }
+      return res.status(200).send({
+        data: user.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
         message: e,
       });
     }
   }
   //forgot-password
-  async forgotPassword(req, res) {}
+  async forgotPassword(req, res) {
+    try {
+      const id = req.params.id;
+      let { passwordNew } = req.body;
+      passwordNew = bcrypt.hashSync(passwordNew, saltRounds);
+      let user = await userModel.changePassword(passwordNew, id);
+      if (user.error) {
+        return res.status(500).send({
+          message: "Error Server",
+        });
+      } else {
+        return res.status(201).send({
+          message: "Cập Nhật Mật Khẩu Thành Công",
+        });
+      }
+    } catch (error) {
+      return res.status(500).send({
+        message: error,
+      });
+    }
+  }
 }
 
 module.exports = new AuthController();

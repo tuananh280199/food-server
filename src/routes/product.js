@@ -8,6 +8,7 @@ route.get("/get-hot-product", productController.getHotProduct);
 route.get("/get-more-hot-product", productController.getMoreHotProduct);
 route.get("/get-more-hot-product/new", productController.filterNewProductHot);
 route.get("/get-more-hot-product/sale", productController.filterSaleProductHot);
+route.get("/get-hint-product", productController.getHintProduct);
 route.get(
   "/get-product-by-category/:category_id",
   productController.getProductByCategory

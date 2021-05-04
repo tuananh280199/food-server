@@ -4,14 +4,18 @@ const limit = 10;
 class OrderModel {
   postInformationShipping(data) {
     return new Promise((resolve, reject) => {
-      let sql = "INSERT INTO shipping VALUES(NULL, ?,?,?)";
-      db.query(sql, [data.address, data.phone, data.note], (error, results) => {
-        if (error) {
-          reject({ error });
-        } else {
-          resolve({ results: results }); //TODO: trả về id shipping vừa thêm để khi order sẽ lấy id đó thêm vào order
+      let sql = "INSERT INTO shipping VALUES(NULL, ?,?,?,?)";
+      db.query(
+        sql,
+        [data.name, data.address, data.phone, data.note],
+        (error, results) => {
+          if (error) {
+            reject({ error });
+          } else {
+            resolve({ results: results }); //TODO: trả về id shipping vừa thêm để khi order sẽ lấy id đó thêm vào order
+          }
         }
-      });
+      );
     });
   }
 

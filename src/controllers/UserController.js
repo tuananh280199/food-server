@@ -1,6 +1,5 @@
 const userModel = require("../models/UserModel");
 const validate = require("../../utils/validate");
-const configPath = require("../../utils/configPath");
 
 class UserController {
   //update user
@@ -35,7 +34,6 @@ class UserController {
       if (req.file) {
         const id = Number(req.params.id);
         let image = req.file.path;
-        image = configPath(image);
         const user = await userModel.updateAvatar(id, image);
         if (user.results) {
           const newUser = {
