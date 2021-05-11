@@ -41,5 +41,10 @@ route.delete(
   [verifyToken],
   productController.deleteFavoriteProduct
 );
+route.get(
+  "/count-favorite-product/:user_id",
+  verifyToken,
+  productController.countFavoriteProduct
+);
 
 module.exports = route;

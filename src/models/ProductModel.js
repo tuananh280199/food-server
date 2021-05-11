@@ -263,6 +263,20 @@ class ProductModel {
       });
     });
   }
+
+  countFavoriteProduct(uid) {
+    return new Promise((resolve, reject) => {
+      let sql =
+        "SELECT COUNT(id) as numberFavorite FROM `user_favourite_product` WHERE `user_favourite_product`.user_id = ?";
+      db.query(sql, [uid], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new ProductModel();

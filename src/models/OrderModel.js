@@ -117,6 +117,19 @@ class OrderModel {
       });
     });
   }
+
+  getVoucher() {
+    return new Promise((resolve, reject) => {
+      let sql = "SELECT voucher.* FROM voucher";
+      db.query(sql, (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new OrderModel();

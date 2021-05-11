@@ -360,6 +360,20 @@ class ProductController {
       });
     }
   }
+
+  async countFavoriteProduct(req, res) {
+    try {
+      const uid = req.params.user_id;
+      const data = await productModel.countFavoriteProduct(uid);
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new ProductController();

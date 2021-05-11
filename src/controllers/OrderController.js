@@ -68,6 +68,19 @@ class OrderController {
       });
     }
   }
+
+  async getVoucher(req, res) {
+    try {
+      const data = await orderModel.getVoucher();
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new OrderController();
