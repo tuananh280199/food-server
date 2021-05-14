@@ -31,26 +31,27 @@ class UserController {
   //upload avatar
   async updateAvatar(req, res) {
     try {
-      if (req.file) {
-        const id = Number(req.params.id);
-        let image = req.file.path;
-        const user = await userModel.updateAvatar(id, image);
-        if (user.results) {
-          const newUser = {
-            id: user.results.id,
-            name: user.results.name,
-            nickname: user.results.nickname,
-            phone: user.results.phone,
-            address: user.results.address,
-            email: user.results.email,
-            avatar: user.results.avatar,
-          };
-          return res.status(201).send({
-            message: "Cập Nhật Thành Công",
-            data: newUser,
-          });
-        }
+      // if (req.file) {
+      const id = Number(req.params.id);
+      // let image = req.file.path;
+      const image = req.body.url;
+      const user = await userModel.updateAvatar(id, image);
+      if (user.results) {
+        const newUser = {
+          id: user.results.id,
+          name: user.results.name,
+          nickname: user.results.nickname,
+          phone: user.results.phone,
+          address: user.results.address,
+          email: user.results.email,
+          avatar: user.results.avatar,
+        };
+        return res.status(201).send({
+          message: "Cập Nhật Thành Công",
+          data: newUser,
+        });
       }
+      // }
     } catch (error) {
       return res.status(500).send({
         message: e,
