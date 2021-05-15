@@ -77,7 +77,8 @@ class ProductModel {
 
   getProductHint() {
     return new Promise((resolve, reject) => {
-      let sql = "select product.* from product order by RAND() limit 20";
+      let sql =
+        "select product.* from product WHERE out_of_product != 1 order by RAND() limit 20";
       db.query(sql, (error, results) => {
         if (error) {
           reject({ error });

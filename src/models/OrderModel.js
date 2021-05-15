@@ -93,7 +93,7 @@ class OrderModel {
     return new Promise((resolve, reject) => {
       const offset = (page - 1) * limit;
       let sql =
-        "SELECT `order`.id, `order`.order_date, `order`.`status`, `order`.total, shipping.shipping_address, payment.payment_method FROM `order`, payment, shipping WHERE `order`.payment_id = payment.id AND `order`.shipping_id = shipping.id AND `order`.user_id = ? LIMIT ?, ?";
+        "SELECT `order`.id, `order`.order_date, `order`.`status`, `order`.total, shipping.shipping_address, payment.payment_method FROM `order`, payment, shipping WHERE `order`.payment_id = payment.id AND `order`.shipping_id = shipping.id AND `order`.user_id = ? ORDER BY `order`.order_date DESC LIMIT ?, ?";
       db.query(sql, [uid, offset, limit], (error, results) => {
         if (error) {
           reject({ error });
