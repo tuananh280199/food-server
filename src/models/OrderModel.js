@@ -120,8 +120,9 @@ class OrderModel {
 
   getVoucher() {
     return new Promise((resolve, reject) => {
-      let sql = "SELECT voucher.* FROM voucher";
-      db.query(sql, (error, results) => {
+      let dateNow = Math.floor(new Date().getTime() / 1000);
+      let sql = "SELECT voucher.* FROM voucher WHERE expired_in - ? > 0";
+      db.query(sql, [dateNow], (error, results) => {
         if (error) {
           reject({ error });
         } else {
