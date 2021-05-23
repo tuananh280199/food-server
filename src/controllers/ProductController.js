@@ -374,6 +374,104 @@ class ProductController {
       });
     }
   }
+
+  //admin
+
+  async getAllProduct(req, res) {
+    try {
+      let page = 1;
+      if (req.query.page) page = req.query.page;
+      const data = await productModel.getAllProduct(page);
+      if (data.results.length === 0) {
+        return res.status(200).send({
+          data: data.results,
+          page: Number(page),
+          hasNext: false,
+        });
+      }
+      return res.status(200).send({
+        data: data.results,
+        page: Number(page),
+        hasNext: true,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async addProduct(req, res) {
+    try {
+      const addData = req.body.data;
+      const data = await productModel.addProduct(addData);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async updateProduct(req, res) {
+    try {
+      const productId = req.params.product_id;
+      const addData = req.body.data;
+      const data = await productModel.updateProduct(addData, productId);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async deleteProduct(req, res) {
+    try {
+      const product_id = req.params.product_id;
+      await productModel.deleteProduct(product_id);
+      return res.status(200).send({
+        message: "Xoá Thành Công",
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async addSubImage(req, res) {
+    try {
+      const product_id = req.params.product_id;
+      const images = req.body.data;
+      const data = await productModel.addSubImage(images, product_id);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async deleteSubImage(req, res) {
+    try {
+      const product_id = req.params.product_id;
+      await productModel.deleteSubImage(product_id);
+      return res.status(200).send({
+        message: "Xoá Thành Công",
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new ProductController();

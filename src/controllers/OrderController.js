@@ -81,6 +81,45 @@ class OrderController {
       });
     }
   }
+
+  //admin
+  async getAllOrder(req, res) {
+    try {
+      let page = 1;
+      if (req.query.page) page = req.query.page;
+      const data = await orderModel.getOrder(page);
+      if (data.results.length === 0) {
+        return res.status(200).send({
+          data: data.results,
+          page: Number(page),
+          hasNext: false,
+        });
+      }
+      return res.status(200).send({
+        data: data.results,
+        page: Number(page),
+        hasNext: true,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async getOrderDetail(req, res) {
+    try {
+      const order_id = req.params.order_id;
+      const data = await orderModel.getDetailOrder(order_id);
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (error) {
+      return res.status(500).send({
+        message: error,
+      });
+    }
+  }
 }
 
 module.exports = new OrderController();

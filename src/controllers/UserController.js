@@ -58,6 +58,57 @@ class UserController {
       });
     }
   }
+
+  //admin
+
+  async getUser(req, res) {
+    try {
+      let page = 1;
+      if (req.query.page) page = req.query.page;
+      const data = await userModel.getUser(page);
+      if (data.results.length === 0) {
+        return res.status(200).send({
+          data: data.results,
+          page: Number(page),
+          hasNext: false,
+        });
+      }
+      return res.status(200).send({
+        data: data.results,
+        page: Number(page),
+        hasNext: true,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async searchUserByName(req, res) {
+    try {
+      let page = 1;
+      if (req.query.page) page = req.query.page;
+      const user_name = req.query.user_name;
+      const data = await userModel.searchUserByName(user_name, page);
+      if (data.results.length === 0) {
+        return res.status(200).send({
+          data: data.results,
+          page: Number(page),
+          hasNext: false,
+        });
+      }
+      return res.status(200).send({
+        data: data.results,
+        page: Number(page),
+        hasNext: true,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new UserController();

@@ -131,6 +131,37 @@ class OrderModel {
       });
     });
   }
+
+  //admin
+  getOrder(page) {
+    return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      let sql =
+        "SELECT `order`.id, `order`.order_date, `order`.`status`, `order`.total, shipping.shipping_address, payment.payment_method, `user`.`name` FROM `order`, payment, shipping, `user` WHERE `order`.user_id = `user`.id AND `order`.payment_id = payment.id AND `order`.shipping_id = shipping.id ORDER BY `order`.order_date DESC LIMIT ?, ?";
+      db.query(sql, [offset, limit], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
+
+  //SELECT order_detail.id, product.`name`, order_detail.product_price, order_detail.product_quantity FROM `order`, order_detail, product WHERE `order`.id = order_detail.order_id AND order_detail.product_id = product.id AND `order`.id = 9
+  getDetailOrder(order_id) {
+    return new Promise((resolve, reject) => {
+      let sql =
+        "SELECT order_detail.id, product.`name`, order_detail.product_price, order_detail.product_quantity FROM `order`, order_detail, product WHERE `order`.id = order_detail.order_id AND order_detail.product_id = product.id AND `order`.id = ?";
+      db.query(sql, [order_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new OrderModel();

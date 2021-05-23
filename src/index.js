@@ -1,16 +1,16 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
-
+const cors = require("cors");
+app.use(cors());
 //middleware
 app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     extended: true,
   })
 );
 app.use(
-  bodyParser.json({
+  express.json({
     type: "application/json",
   })
 );

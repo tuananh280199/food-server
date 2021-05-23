@@ -46,5 +46,28 @@ route.get(
   verifyToken,
   productController.countFavoriteProduct
 );
+//admin
+route.get("/get-product", productController.getAllProduct);
+route.post("/add-product", verifyToken, productController.addProduct);
+route.put(
+  "/update-product/:product_id",
+  verifyToken,
+  productController.updateProduct
+);
+route.delete(
+  "/delete-product/:product_id",
+  [verifyToken],
+  productController.deleteProduct
+);
+route.post(
+  "/add-sub-image-product/:product_id",
+  verifyToken,
+  productController.addSubImage
+);
+route.delete(
+  "/delete-sub-image-product/:product_id",
+  verifyToken,
+  productController.deleteSubImage
+);
 
 module.exports = route;

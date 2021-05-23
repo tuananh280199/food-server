@@ -2,6 +2,7 @@ const db = require("../../config/db");
 const limit = 10;
 
 class ProductModel {
+  //client
   getHotProduct() {
     return new Promise((resolve, reject) => {
       let sql =
@@ -178,7 +179,7 @@ class ProductModel {
 
   getSubImageProduct(product_id) {
     return new Promise((resolve, reject) => {
-      let sql = "SELECT image FROM product_image WHERE product_id = ?";
+      let sql = "SELECT id, image FROM product_image WHERE product_id = ?";
       db.query(sql, [product_id], (error, results) => {
         if (error) {
           reject({ error });
@@ -270,6 +271,130 @@ class ProductModel {
       let sql =
         "SELECT COUNT(id) as numberFavorite FROM `user_favourite_product` WHERE `user_favourite_product`.user_id = ?";
       db.query(sql, [uid], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
+
+  //admin
+
+  getAllProduct(page) {
+    return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      let sql = "SELECT * FROM product ORDER BY product.id DESC LIMIT ?, ?";
+      db.query(sql, [offset, limit], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
+
+  //id, name price priceSale new sale image like dislike origin unit quantitative ingredient note description category_id out_of_product
+  addProduct(data) {
+    return new Promise((resolve, reject) => {
+      let sql =
+        "INSERT INTO product VALUES (NULL, ?, ?, ?, ?, ?, ?, 0, 0, ?, ?, ?, ?, ?, ?, ?, ?)";
+      db.query(
+        sql,
+        [
+          data.name,
+          data.price,
+          data.priceSale,
+          data.new,
+          data.sale,
+          data.image,
+          data.origin,
+          data.unit,
+          data.quantitative,
+          data.ingredient,
+          data.note,
+          data.description,
+          data.category_id,
+          data.out_of_product,
+        ],
+        (error, results) => {
+          if (error) {
+            reject({ error });
+          } else {
+            resolve({ results });
+          }
+        }
+      );
+    });
+  }
+
+  updateProduct(data, idProduct) {
+    return new Promise((resolve, reject) => {
+      let sql =
+        "UPDATE product SET name = ?, price = ?, priceSale = ?, new = ?, sale = ?, image = ?, origin = ?, unit = ?, quantitative = ?, ingredient = ?, note = ?, description = ?, category_id = ?, out_of_product = ? WHERE product.id = ?";
+      db.query(
+        sql,
+        [
+          data.name,
+          data.price,
+          data.priceSale,
+          data.new,
+          data.sale,
+          data.image,
+          data.origin,
+          data.unit,
+          data.quantitative,
+          data.ingredient,
+          data.note,
+          data.description,
+          data.category_id,
+          data.out_of_product,
+          idProduct,
+        ],
+        (error, results) => {
+          if (error) {
+            reject({ error });
+          } else {
+            resolve({ results: results[0] });
+          }
+        }
+      );
+    });
+  }
+
+  deleteProduct(productId) {
+    return new Promise((resolve, reject) => {
+      let sql = "DELETE FROM product WHERE id = ?";
+      db.query(sql, [productId], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
+
+  addSubImage(images, product_id) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < images.length; i++) {
+        const sql = "INSERT INTO product_image VALUES (NULL, ?, ?)";
+        db.query(sql, [images[i], product_id], (error, results) => {
+          if (error) {
+            reject({ error });
+          }
+        });
+      }
+      resolve({ results: "success" });
+    });
+  }
+
+  deleteSubImage(product_id) {
+    return new Promise((resolve, reject) => {
+      let sql = "DELETE FROM product_image WHERE product_id = ?";
+      db.query(sql, [product_id], (error, results) => {
         if (error) {
           reject({ error });
         } else {

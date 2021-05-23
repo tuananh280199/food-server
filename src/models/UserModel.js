@@ -1,4 +1,5 @@
 const db = require("../../config/db");
+const limit = 10;
 
 class UserModel {
   findUserByUserName(username) {
@@ -118,6 +119,35 @@ class UserModel {
               }
             }
           );
+        }
+      });
+    });
+  }
+
+  //admin
+  getUser(page) {
+    return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      let sql = "SELECT * FROM user ORDER BY user.id DESC LIMIT ?, ?";
+      db.query(sql, [offset, limit], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
+
+  searchUserByName(user_name, page) {
+    return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      let sql = `SELECT * FROM user WHERE name LIKE '%${user_name}%' LIMIT ?, ?`;
+      db.query(sql, [offset, limit], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
         }
       });
     });
