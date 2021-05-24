@@ -152,6 +152,32 @@ class UserModel {
       });
     });
   }
+
+  updateRole(role, user_id) {
+    return new Promise((resolve, reject) => {
+      let sql = "UPDATE user SET role = ? WHERE id = ?";
+      db.query(sql, [role, user_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
+
+  deleteUser(user_id) {
+    return new Promise((resolve, reject) => {
+      let sql = "DELETE FROM user WHERE id = ?";
+      db.query(sql, [user_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new UserModel();

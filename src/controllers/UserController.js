@@ -109,6 +109,35 @@ class UserController {
       });
     }
   }
+
+  async updateRole(req, res) {
+    try {
+      const userId = req.params.user_id;
+      const role = req.body.role;
+      const data = await userModel.updateRole(role, userId);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async deleteCategory(req, res) {
+    try {
+      const userId = req.params.user_id;
+      await userModel.deleteUser(userId);
+      return res.status(200).send({
+        message: "Xoá Thành Công",
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new UserController();

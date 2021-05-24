@@ -47,6 +47,7 @@ class AuthController {
             address: user.results.address,
             email: user.results.email,
             avatar: user.results.avatar,
+            role: user.results.role,
           };
           const accessToken = generateAcceptToken(userToken);
           const refreshToken = generateRefreshToken(userToken);
