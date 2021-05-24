@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-// const cors = require("cors");
-// app.use(cors());
+const cors = require("cors");
 //middleware
 app.use(
   express.urlencoded({
@@ -24,6 +23,8 @@ routes(app);
 app.use(function (req, res) {
   res.status(404).send({ url: req.originalUrl + " not found" });
 });
+
+app.use(cors());
 
 app.listen(port);
 
