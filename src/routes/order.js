@@ -14,5 +14,10 @@ route.get(
 );
 route.post("/send-order", verifyToken, orderController.sendOrder);
 route.get("/get-order/:order_id", verifyToken, orderController.getOrderDetail);
+route.put(
+  "/update-status/:order_id",
+  verifyToken,
+  orderController.updateOrderStatus
+);
 
 module.exports = route;

@@ -120,6 +120,21 @@ class OrderController {
       });
     }
   }
+
+  async updateOrderStatus(req, res) {
+    try {
+      const order_id = req.params.order_id;
+      const status = req.body.status;
+      const data = await orderModel.updateOrderStatus(status, order_id);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new OrderController();

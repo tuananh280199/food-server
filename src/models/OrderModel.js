@@ -162,6 +162,19 @@ class OrderModel {
       });
     });
   }
+
+  updateOrderStatus(status, order_id) {
+    return new Promise((resolve, reject) => {
+      let sql = "UPDATE `order` SET status = ? WHERE id = ?";
+      db.query(sql, [status, order_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new OrderModel();
