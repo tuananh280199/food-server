@@ -176,6 +176,19 @@ class OrderModel {
     });
   }
 
+  getAllVoucher() {
+    return new Promise((resolve, reject) => {
+      let sql = "SELECT * FROM voucher";
+      db.query(sql, (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
+
   addVoucher(data) {
     return new Promise((resolve, reject) => {
       let sql = "INSERT INTO voucher VALUES (NULL, ?, ?, ?, ?, ?)";
