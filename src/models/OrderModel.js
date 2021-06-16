@@ -199,7 +199,7 @@ class OrderModel {
           data.discount_price,
           data.discount_percent,
           data.min_price_to_use,
-          expired_in,
+          data.expired_in,
         ],
         (error, results) => {
           if (error) {
@@ -223,7 +223,7 @@ class OrderModel {
           data.discount_price,
           data.discount_percent,
           data.min_price_to_use,
-          expired_in,
+          data.expired_in,
           voucherId,
         ],
         (error, results) => {
