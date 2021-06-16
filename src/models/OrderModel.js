@@ -175,6 +175,67 @@ class OrderModel {
       });
     });
   }
+
+  addVoucher(data) {
+    return new Promise((resolve, reject) => {
+      let sql = "INSERT INTO voucher VALUES (NULL, ?, ?, ?, ?, ?)";
+      db.query(
+        sql,
+        [
+          data.name,
+          data.discount_price,
+          data.discount_percent,
+          data.min_price_to_use,
+          expired_in,
+        ],
+        (error, results) => {
+          if (error) {
+            reject({ error });
+          } else {
+            resolve({ results });
+          }
+        }
+      );
+    });
+  }
+
+  updateVoucher(data, voucherId) {
+    return new Promise((resolve, reject) => {
+      let sql =
+        "UPDATE voucher SET name = ? , discount_price = ?, discount_percent = ?, min_price_to_use = ?, expired_in = ? WHERE id = ?";
+      db.query(
+        sql,
+        [
+          data.name,
+          data.discount_price,
+          data.discount_percent,
+          data.min_price_to_use,
+          expired_in,
+          voucherId,
+        ],
+        (error, results) => {
+          if (error) {
+            reject({ error });
+          } else {
+            resolve({ results: results[0] });
+          }
+        }
+      );
+    });
+  }
+
+  deleteVoucher(voucherId) {
+    return new Promise((resolve, reject) => {
+      let sql = "DELETE FROM voucher WHERE id = ?";
+      db.query(sql, [voucherId], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
 }
 
 module.exports = new OrderModel();

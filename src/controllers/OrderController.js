@@ -135,6 +135,62 @@ class OrderController {
       });
     }
   }
+
+  async getAllVoucher(req, res) {
+    try {
+      const data = await orderModel.getAllVoucher();
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async addVoucher(req, res) {
+    try {
+      const addData = req.body.data;
+      const data = await orderModel.addVoucher(addData);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async updateVoucher(req, res) {
+    try {
+      const voucherId = req.params.voucher_id;
+      const updateData = req.body.data;
+      const data = await orderModel.updateVoucher(updateData, voucherId);
+      return res.status(201).send({
+        data: data.results,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  async deleteVoucher(req, res) {
+    try {
+      const voucherId = req.params.voucher_id;
+      await orderModel.deleteVoucher(voucherId);
+      return res.status(200).send({
+        message: "Xoá Thành Công",
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
 }
 
 module.exports = new OrderController();
