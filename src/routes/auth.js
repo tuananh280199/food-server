@@ -5,6 +5,7 @@ const authController = require("../controllers/AuthController");
 const verifyToken = require("../middlewares/verifyToken");
 
 route.post("/refresh-token", authController.refreshToken);
+route.post("/check-token", authController.checkToken);
 route.post("/login", authController.login);
 route.post("/logout", authController.logout);
 route.post("/register", authController.register);
