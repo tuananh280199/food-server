@@ -1,4 +1,25 @@
+var admin = require("firebase-admin");
 const orderModel = require("../models/OrderModel");
+const deviceModel = require("../models/DeviceModel");
+
+const listStatus = [
+  // {status: "Chờ Xác Nhận", description: 'Chờ Xác Nhận Đơn Hàng'},
+  { status: "Xác Nhận Đơn Hàng", description: "Xác nhận đơn hàng" },
+  {
+    status: "Đang Giao Hàng",
+    description: "Tài xế đang giao hàng đến cho bạn",
+  },
+  { status: "Đã Giao", description: "Đơn hàng của bạn đã được giao" },
+  { status: "Huỷ Đơn Hàng", description: "Đơn hàng của bạn đã bị huỷ" },
+];
+
+const getDescriptionStatus = (listStatus, status) => {
+  const result = listStatus.find((item) => item.status === status);
+  if (result) {
+    return result.description;
+  }
+  return status;
+};
 
 class OrderController {
   async sendOrder(req, res) {
@@ -125,7 +146,28 @@ class OrderController {
     try {
       const order_id = req.params.order_id;
       const status = req.body.status;
+      const user_id = req.body.user_id;
       const data = await orderModel.updateOrderStatus(status, order_id);
+      const devices = await deviceModel.getDevicesByUserId(user_id);
+      const deviceTokens = devices.results.map((item) => item.device_token);
+      await admin.messaging().sendToDevice(
+        // [
+        //   "cS_x-yPtSt2wDoc9r37vZ-:APA91bHKhBsTallm0TlHyDpH4panbfdU6QEBp6WXqkCmmz9OdBvBi21NZYfa8Zu7ab_hws0rJlE8j7apEkOaBVc5G_TzdCrTA5yvTw3uhAemnPb-iHXvb-VsP6xHxfZy4wKMaqQ04_U6",
+        // ],
+        deviceTokens,
+        {
+          data: {
+            title: "Khoái Khẩu",
+            message: getDescriptionStatus(listStatus, data.results),
+          },
+        },
+        {
+          // Required for background/quit data-only messages on iOS
+          contentAvailable: true,
+          // Required for background/quit data-only messages on Android
+          priority: "high",
+        }
+      );
       return res.status(201).send({
         data: data.results,
       });

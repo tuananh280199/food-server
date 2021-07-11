@@ -8,14 +8,14 @@ const tokenList = {};
 function generateAcceptToken(user) {
   return jwt.sign({ user }, process.env.TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: 86400 / 2, // 20 phút
+    expiresIn: 1800, // 30 phút
   });
 }
 
 function generateRefreshToken(user) {
   return jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: 86400, // 1 ngày
+    expiresIn: 86400 / 2, // 1 ngày
   });
 }
 
@@ -62,6 +62,26 @@ class AuthController {
           });
         }
       }
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
+  //check token
+  async checkToken(req, res) {
+    try {
+      const token = req.body.token;
+      jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+        if (err) {
+          return res.status(403).send(err);
+        } else {
+          return res.status(200).send({
+            token,
+          });
+        }
+      });
     } catch (e) {
       return res.status(500).send({
         message: e,
