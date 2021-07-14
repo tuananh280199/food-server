@@ -47,7 +47,7 @@ class UserModel {
   create(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        "INSERT INTO user VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL)";
+        "INSERT INTO user VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
       db.query(sql, [data.username, data.password], (error, results) => {
         if (error) {
           reject({ error });
