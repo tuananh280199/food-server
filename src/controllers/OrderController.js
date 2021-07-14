@@ -150,7 +150,6 @@ class OrderController {
       const data = await orderModel.updateOrderStatus(status, order_id);
       const devices = await deviceModel.getDevicesByUserId(user_id);
       const deviceTokens = devices.results.map((item) => item.device_token);
-      console.log(deviceTokens);
       await admin.messaging().sendToDevice(
         // [
         //   "cS_x-yPtSt2wDoc9r37vZ-:APA91bHKhBsTallm0TlHyDpH4panbfdU6QEBp6WXqkCmmz9OdBvBi21NZYfa8Zu7ab_hws0rJlE8j7apEkOaBVc5G_TzdCrTA5yvTw3uhAemnPb-iHXvb-VsP6xHxfZy4wKMaqQ04_U6",
