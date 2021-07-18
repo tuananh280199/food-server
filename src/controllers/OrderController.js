@@ -42,6 +42,7 @@ class OrderController {
       }
       const orderDetail = await orderModel.postOrderDetail(order_id, products);
       return res.status(201).send({
+        order_id,
         message: "Đặt Hàng Thành Công",
       });
     } catch (error) {
@@ -148,26 +149,28 @@ class OrderController {
       const status = req.body.status;
       const user_id = req.body.user_id;
       const data = await orderModel.updateOrderStatus(status, order_id);
-      const devices = await deviceModel.getDevicesByUserId(user_id);
-      const deviceTokens = devices.results.map((item) => item.device_token);
-      await admin.messaging().sendToDevice(
-        // [
-        //   "cS_x-yPtSt2wDoc9r37vZ-:APA91bHKhBsTallm0TlHyDpH4panbfdU6QEBp6WXqkCmmz9OdBvBi21NZYfa8Zu7ab_hws0rJlE8j7apEkOaBVc5G_TzdCrTA5yvTw3uhAemnPb-iHXvb-VsP6xHxfZy4wKMaqQ04_U6",
-        // ],
-        deviceTokens,
-        {
-          data: {
-            title: "Khoái Khẩu",
-            message: getDescriptionStatus(listStatus, data.results),
+      if (user_id && user_id !== -1) {
+        const devices = await deviceModel.getDevicesByUserId(user_id);
+        const deviceTokens = devices.results.map((item) => item.device_token);
+        await admin.messaging().sendToDevice(
+          // [
+          //   "cS_x-yPtSt2wDoc9r37vZ-:APA91bHKhBsTallm0TlHyDpH4panbfdU6QEBp6WXqkCmmz9OdBvBi21NZYfa8Zu7ab_hws0rJlE8j7apEkOaBVc5G_TzdCrTA5yvTw3uhAemnPb-iHXvb-VsP6xHxfZy4wKMaqQ04_U6",
+          // ],
+          deviceTokens,
+          {
+            data: {
+              title: "Khoái Khẩu",
+              message: getDescriptionStatus(listStatus, data.results),
+            },
           },
-        },
-        {
-          // Required for background/quit data-only messages on iOS
-          contentAvailable: true,
-          // Required for background/quit data-only messages on Android
-          priority: "high",
-        }
-      );
+          {
+            // Required for background/quit data-only messages on iOS
+            contentAvailable: true,
+            // Required for background/quit data-only messages on Android
+            priority: "high",
+          }
+        );
+      }
       return res.status(201).send({
         data: data.results,
       });
