@@ -149,13 +149,10 @@ class OrderController {
       const status = req.body.status;
       const user_id = req.body.user_id;
       const data = await orderModel.updateOrderStatus(status, order_id);
-      if (user_id && Number(user_id) !== -1) {
+      // if (user_id && Number(user_id) !== -1) {
         const devices = await deviceModel.getDevicesByUserId(user_id);
         const deviceTokens = devices.results.map((item) => item.device_token);
         await admin.messaging().sendToDevice(
-          // [
-          //   "cS_x-yPtSt2wDoc9r37vZ-:APA91bHKhBsTallm0TlHyDpH4panbfdU6QEBp6WXqkCmmz9OdBvBi21NZYfa8Zu7ab_hws0rJlE8j7apEkOaBVc5G_TzdCrTA5yvTw3uhAemnPb-iHXvb-VsP6xHxfZy4wKMaqQ04_U6",
-          // ],
           deviceTokens,
           {
             data: {
@@ -170,7 +167,7 @@ class OrderController {
             priority: "high",
           }
         );
-      }
+      // }
       return res.status(201).send({
         data: data.results,
       });

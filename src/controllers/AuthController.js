@@ -8,14 +8,14 @@ const tokenList = {};
 function generateAcceptToken(user) {
   return jwt.sign({ user }, process.env.TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: 1800, // 30 phút
+    expiresIn: 86400 / 4, // 6h
   });
 }
 
 function generateRefreshToken(user) {
   return jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: 86400 / 2, // 1 ngày
+    expiresIn: 86400 / 2, // 12h
   });
 }
 
