@@ -1,4 +1,4 @@
-const { ADD_DEVICE } = require("./constants");
+const { ADD_DEVICE, UPDATE_STATUS, SERVER_SEND_STATUS } = require("./constants");
 const deviceModel = require("../models/DeviceModel");
 
 const SocketServer = (app, port) => {
@@ -10,6 +10,7 @@ const SocketServer = (app, port) => {
 
     socket.on(ADD_DEVICE, async (data) => {
       // console.log("ADD_DEVICE: ", data);
+      socket.join(data.user_id);
       try {
         const hasDevice = await deviceModel.hasDevice(
           data.device_token,
@@ -21,6 +22,12 @@ const SocketServer = (app, port) => {
         throw e;
       }
     });
+
+    socket.on(UPDATE_STATUS, (data) => {
+      // console.log("UPDATE_STATUS: ", data);
+      socket.join(data.user_id);
+      socket.to(data.user_id).emit(SERVER_SEND_STATUS, data);
+    })
   });
 
   httpServer.listen(port);

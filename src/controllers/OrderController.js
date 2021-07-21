@@ -149,7 +149,7 @@ class OrderController {
       const status = req.body.status;
       const user_id = req.body.user_id;
       const data = await orderModel.updateOrderStatus(status, order_id);
-      // if (user_id && Number(user_id) !== -1) {
+      if (user_id && Number(user_id) !== -1) {
         const devices = await deviceModel.getDevicesByUserId(user_id);
         const deviceTokens = devices.results.map((item) => item.device_token);
         await admin.messaging().sendToDevice(
@@ -167,7 +167,7 @@ class OrderController {
             priority: "high",
           }
         );
-      // }
+      }
       return res.status(201).send({
         data: data.results,
       });
