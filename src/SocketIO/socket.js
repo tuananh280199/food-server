@@ -1,4 +1,4 @@
-const { ADD_DEVICE, UPDATE_STATUS, SERVER_SEND_STATUS } = require("./constants");
+const { ADD_DEVICE, UPDATE_STATUS, SERVER_SEND_STATUS, CLIENT_CONNECT_SERVER } = require("./constants");
 const deviceModel = require("../models/DeviceModel");
 
 const SocketServer = (app, port) => {
@@ -6,7 +6,12 @@ const SocketServer = (app, port) => {
   const io = require("socket.io")(httpServer);
 
   io.on("connection", (socket) => {
-    // console.log("co connnection: ", socket.id);
+    // console.log("co connnection: ", socket.id)
+
+    socket.on(CLIENT_CONNECT_SERVER, (data) => {
+      // console.log('CLIENT_CONNECT_SERVER: ', data.user_id);
+      socket.join(data.user_id);
+    });
 
     socket.on(ADD_DEVICE, async (data) => {
       // console.log("ADD_DEVICE: ", data);
