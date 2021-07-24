@@ -47,10 +47,10 @@ class DeviceModel {
     });
   }
 
-  deleteDevice(device_token) {
+  deleteDevice(device_token, user_id) {
     return new Promise((resolve, reject) => {
-      let sql = "DELETE FROM devices WHERE device_token = ?";
-      db.query(sql, [device_token], (error, results) => {
+      let sql = "DELETE FROM devices WHERE device_token = ? AND user_id = ?";
+      db.query(sql, [device_token, user_id], (error, results) => {
         if (error) {
           reject({ error });
         } else {

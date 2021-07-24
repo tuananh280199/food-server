@@ -40,7 +40,8 @@ class DeviceController {
   async deleteDevice(req, res) {
     try {
       const device_token = req.params.device_token;
-      await deviceModel.deleteDevice(device_token);
+      const user_id = req.params.user_id;
+      await deviceModel.deleteDevice(device_token, user_id);
       return res.status(200).send({
         message: "Xoá Thành Công",
       });

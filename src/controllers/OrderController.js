@@ -104,6 +104,20 @@ class OrderController {
     }
   }
 
+  async getLastOrderStatusByUserId(req,res) {
+    try {
+      const user_id = req.params.user_id;
+      const data = await orderModel.getLastOrderStatusByUserId(user_id);
+      return res.status(200).send({
+        data: data.results,
+      });
+    } catch (error) {
+      return res.status(500).send({
+        message: error,
+      });
+    }
+  }
+
   //admin
   async getAllOrder(req, res) {
     try {

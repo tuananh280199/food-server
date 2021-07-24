@@ -1,5 +1,12 @@
-const { ADD_DEVICE, UPDATE_STATUS, SERVER_SEND_STATUS, CLIENT_CONNECT_SERVER } = require("./constants");
+const { ADD_DEVICE,
+  UPDATE_STATUS,
+  SERVER_SEND_STATUS,
+  CLIENT_CONNECT_SERVER,
+  CLIENT_SEND_ORDER,
+  SERVER_EMIT_CLIENT_SEND_ORDER,
+} = require("./constants");
 const deviceModel = require("../models/DeviceModel");
+const orderModel = require('../models/OrderModel');
 
 const SocketServer = (app, port) => {
   const httpServer = require("http").Server(app);
@@ -32,6 +39,16 @@ const SocketServer = (app, port) => {
       // console.log("UPDATE_STATUS: ", data);
       socket.join(data.user_id);
       socket.to(data.user_id).emit(SERVER_SEND_STATUS, data);
+    })
+
+    socket.on(CLIENT_SEND_ORDER, async (data) => {
+      try {
+        const order = await orderModel.getOrderById(data.order_id);
+        // console.log("order: ", order.results);
+        socket.broadcast.emit(SERVER_EMIT_CLIENT_SEND_ORDER, {order: order.results});
+      } catch (error) {
+        throw e;
+      }
     })
   });
 

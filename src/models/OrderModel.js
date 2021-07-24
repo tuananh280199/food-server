@@ -132,6 +132,19 @@ class OrderModel {
     });
   }
 
+  getLastOrderStatusByUserId(user_id) {
+    return new Promise((resolve, reject) => {
+      let sql = "SELECT `order`.id , `status` FROM `order` WHERE user_id = ? ORDER BY id DESC LIMIT 1";
+      db.query(sql, [user_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
+        }
+      });
+    });
+  }
+
   //admin
   getOrder(page) {
     return new Promise((resolve, reject) => {
@@ -143,6 +156,20 @@ class OrderModel {
           reject({ error });
         } else {
           resolve({ results: results });
+        }
+      });
+    });
+  }
+
+  getOrderById(order_id) {
+    return new Promise((resolve, reject) => {
+      let sql =
+          "SELECT `order`.id, `order`.user_id, `order`.order_date, `order`.`status`, `order`.total, shipping.shipping_address, shipping.shipping_phone, payment.payment_method, shipping.shipping_name FROM `order`, payment, shipping, `user` WHERE `order`.user_id = `user`.id AND `order`.payment_id = payment.id AND `order`.shipping_id = shipping.id AND `order`.id = ?";
+      db.query(sql, [order_id], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results[0] });
         }
       });
     });

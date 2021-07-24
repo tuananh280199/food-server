@@ -15,6 +15,7 @@ route.get(
 );
 route.post("/send-order", verifyToken, orderController.sendOrder);
 route.get("/get-order/:order_id", verifyToken, orderController.getOrderDetail);
+route.get("/get-last-order-status-by-user/:user_id", verifyToken, orderController.getLastOrderStatusByUserId);
 route.put(
   "/update-status/:order_id",
   verifyToken,

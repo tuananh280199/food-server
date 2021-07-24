@@ -8,7 +8,7 @@ const tokenList = {};
 function generateAcceptToken(user) {
   return jwt.sign({ user }, process.env.TOKEN_SECRET, {
     algorithm: "HS256",
-    expiresIn: 86400 / 4, // 6h
+    expiresIn: 86400 / 2, // 12h
   });
 }
 
