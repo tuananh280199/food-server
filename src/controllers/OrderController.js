@@ -165,22 +165,24 @@ class OrderController {
       const data = await orderModel.updateOrderStatus(status, order_id);
       if (user_id && Number(user_id) !== -1) {
         const devices = await deviceModel.getDevicesByUserId(user_id);
-        const deviceTokens = devices.results.map((item) => item.device_token);
-        await admin.messaging().sendToDevice(
-          deviceTokens,
-          {
-            data: {
-              title: "Khoái Khẩu",
-              message: getDescriptionStatus(listStatus, data.results),
-            },
-          },
-          {
-            // Required for background/quit data-only messages on iOS
-            contentAvailable: true,
-            // Required for background/quit data-only messages on Android
-            priority: "high",
-          }
-        );
+        if(devices?.results?.length > 0) {
+          const deviceTokens = devices.results.map((item) => item.device_token);
+          await admin.messaging().sendToDevice(
+              deviceTokens,
+              {
+                data: {
+                  title: "Khoái Khẩu",
+                  message: getDescriptionStatus(listStatus, data.results),
+                },
+              },
+              {
+                // Required for background/quit data-only messages on iOS
+                contentAvailable: true,
+                // Required for background/quit data-only messages on Android
+                priority: "high",
+              }
+          );
+        }
       }
       return res.status(201).send({
         data: data.results,
