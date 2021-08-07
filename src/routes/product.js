@@ -22,6 +22,7 @@ route.get(
   productController.filterSaleProductByCategory
 );
 route.get("/search-by-name", productController.searchProductByName);
+route.get("/search-by-price", productController.searchProductByPrice);
 route.get("/search-product-new", productController.searchProductNew);
 route.get("/search-product-sale", productController.searchProductSale);
 route.get("/search-product-hot", productController.searchProductHot);

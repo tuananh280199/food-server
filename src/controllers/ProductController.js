@@ -204,6 +204,31 @@ class ProductController {
     }
   }
 
+  async searchProductByPrice(req, res) {
+    try {
+      let page = 1;
+      if (req.query.page) page = req.query.page;
+      const maxPrice = req.query.max_price;
+      const data = await productModel.searchProductByPrice(maxPrice, page);
+      if (data.results.length === 0) {
+        return res.status(200).send({
+          data: data.results,
+          page: Number(page),
+          hasNext: false,
+        });
+      }
+      return res.status(200).send({
+        data: data.results,
+        page: Number(page),
+        hasNext: true,
+      });
+    } catch (e) {
+      return res.status(500).send({
+        message: e,
+      });
+    }
+  }
+
   async searchProductNew(req, res) {
     try {
       let page = 1;

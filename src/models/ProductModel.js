@@ -119,6 +119,20 @@ class ProductModel {
     });
   }
 
+  searchProductByPrice(maxPrice, page) {
+    return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      let sql = `SELECT * from product WHERE (sale = 1 AND priceSale >= 10000 and priceSale <= ?) OR (sale = 0 AND price >= 10000 and price <= ?) LIMIT ?, ?`;
+      db.query(sql, [maxPrice, maxPrice, offset, limit], (error, results) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ results: results });
+        }
+      });
+    });
+  }
+
   searchProductNew(page) {
     return new Promise((resolve, reject) => {
       const offset = (page - 1) * limit;

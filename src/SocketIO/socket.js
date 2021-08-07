@@ -38,6 +38,7 @@ const SocketServer = (app, port) => {
     socket.on(UPDATE_STATUS, (data) => {
       // console.log("UPDATE_STATUS: ", data);
       socket.join(data.user_id);
+      // console.log(socket.adapter.rooms);
       socket.to(data.user_id).emit(SERVER_SEND_STATUS, data);
     })
 
